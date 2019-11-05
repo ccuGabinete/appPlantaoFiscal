@@ -1,0 +1,15 @@
+<div class="alerta" *ngIf="loadingCampos === 2">
+    <span>Erro: há campos sem preenchimento</span>
+</div>
+
+<div class="alerta" *ngIf="loadingCampos === 3">
+  <span>Sucesso: dados salvos</span>
+</div>
+
+<div class="alerta" *ngIf="loadingCampos === 4">
+  <span>Erro: verifique sua conexão</span>
+</div>
+
+<div class="alerta" *ngIf="loadingCampos === 5">
+  <span>Erro: acesso não autorizado</span>
+</div>
