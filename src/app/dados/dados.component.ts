@@ -14,6 +14,7 @@ import { FormControl } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Agentes } from '../interfaces/agentes/agentes';
+import { BuscalacreService } from '../services/buscarlacre/buscarlacre.service';
 const go = console.log;
 
 export interface User {
@@ -30,6 +31,7 @@ export class DadosComponent implements OnInit, OnDestroy {
   nome: string;
   usuario: string;
   link: string;
+  logradouro = '';
   myControl = new FormControl();
   myControlBairros = new FormControl();
   googleoptions = {
@@ -45,7 +47,8 @@ export class DadosComponent implements OnInit, OnDestroy {
     private geocodeservice: GeocodeService,
     private router: Router,
     private logado: LogadoService,
-    private formatacoes: FormatacoesService
+    private formatacoes: FormatacoesService,
+    private buscarLacre: BuscalacreService
   ) { }
 
   options: Agentes[] = this.agente.getLista();
@@ -88,6 +91,14 @@ export class DadosComponent implements OnInit, OnDestroy {
       );
 
 
+    // busquei todos os lacres e criei um array para armazenar esses lacres até o fim
+    // da seção
+    this.buscarLacre.buscarLacre().subscribe(arr => {
+      const resp = this.buscarLacre.converteParaArrayDeLacres(arr.body);
+      this.buscarLacre.atualizarArrayLacres(resp);
+      go(resp);
+    });
+
   }
 
   displayFn(agentes?: Agentes): string | undefined {
@@ -126,8 +137,11 @@ export class DadosComponent implements OnInit, OnDestroy {
 
   }
 
+
+  // precisei criar um variavel logradouro para permitir ao plantão
+  // verificar qual o bairro daquele endereço
   public handleAddress(address: any) {
-    this.autodeapreensao.logradouro = address.address_components[0].long_name;
+    this.logradouro = address.address_components[0].long_name;
     this.autodeapreensao.dataapreensao = this.formatacoes.gerarMomentData(this.autodeapreensao.dataapreensao);
     go(this.formatacoes.formatarEndereco(this.autodeapreensao.logradouro, this.autodeapreensao.bairro));
   }

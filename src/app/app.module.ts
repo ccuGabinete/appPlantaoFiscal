@@ -1,3 +1,4 @@
+import { BuscalacreService } from './services/buscarlacre/buscarlacre.service';
 
 import { GeocodeService } from './services/geocode/geocode.service';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
@@ -45,11 +46,14 @@ import { Lacre } from './models/lacre/lacre';
 import { Auto } from './models/auto/auto';
 import { Agente } from './models/agente/agente';
 import { Bairro } from './models/bairro/bairro';
+import { NgxMaskModule, IConfig } from 'ngx-mask';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
+
+export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
 
 @NgModule({
   declarations: [
@@ -59,6 +63,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     AvisocamposComponent
   ],
   imports: [
+    NgxMaskModule.forRoot(options),
     NgxMaterialTimepickerModule.setLocale('pt-BR'),
     GooglePlaceModule,
     BrowserModule,
@@ -90,6 +95,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     })
   ],
   providers: [
+    BuscalacreService,
     LoginService,
     AvisocamposService,
     Avisocamposmodel,

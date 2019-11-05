@@ -29,6 +29,11 @@
       </mat-expansion-panel-header>
 
       <form class="example-form">
+        <mat-form-field>
+          <input matInput type="text" placeholder="Auto" name="auto" id="auto" [(ngModel)]=autodeapreensao.numero
+            maxlength='8' [required]=true mask='00.00.00'>
+        </mat-form-field>
+
         <mat-form-field class="example-full-width">
           <input type="text" placeholder="Matrícula" aria-label="Assignee" matInput [formControl]="myControl"
             [required]=true [matAutocomplete]="auto">
@@ -41,8 +46,8 @@
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput type="text" placeholder="Agente" name="agente" id="agente"
-            [(ngModel)]='autodeapreensao.agente' [disabled]=true>
+          <input matInput type="text" placeholder="Agente" name="agente" id="agente" [(ngModel)]=autodeapreensao.agente
+            [disabled]=true>
         </mat-form-field>
 
         <mat-form-field>
@@ -52,11 +57,7 @@
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
 
-        <mat-form-field class="unicorn-dark-theme">
-          <input matInput placeholder="Hora da apreensão" [ngxTimepicker]="picker2" name="hora" id="hora"
-            [(ngModel)]=autodeapreensao.hora [required]=true>
-          <ngx-material-timepicker #picker2></ngx-material-timepicker>
-        </mat-form-field>
+
 
       </form>
 
@@ -74,7 +75,8 @@
           <input type="text" placeholder="Bairro" aria-label="Assignee2" matInput [formControl]="myControlBairros"
             [required]=true [matAutocomplete]="auto2">
           <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayFnBairros">
-            <mat-option *ngFor="let optionbairro of filteredOptionsBairros | async" [value]="optionbairro" (onSelectionChange)=onChangeBairro(optionbairro)>
+            <mat-option *ngFor="let optionbairro of filteredOptionsBairros | async" [value]="optionbairro"
+              (onSelectionChange)=onChangeBairro(optionbairro)>
               {{optionbairro.bairro}}
             </mat-option>
           </mat-autocomplete>
@@ -94,6 +96,7 @@
           Lacres e Apreensões
         </mat-panel-title>
       </mat-expansion-panel-header>
+
     </mat-expansion-panel>
 
     <mat-expansion-panel>

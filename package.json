@@ -100,6 +100,7 @@
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.27",
     "ngx-google-places-autocomplete": "^2.0.4",
+    "ngx-mask": "^8.1.6",
     "ngx-material-timepicker": "^5.2.2",
     "popper": "^1.0.1"
   }
