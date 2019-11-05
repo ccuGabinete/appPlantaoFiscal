@@ -1,1 +1,107 @@
-<h1>I am cuzão</h1>
+<!--#region header  -->
+<div class="unicorn-dark-theme">
+  <mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <span style="font-size: 1.1em; color:darkblue;">Depósito Público Municipal</span>
+      <mat-icon matTooltip="logout" (click)="onLogout()"> directions_run</mat-icon>
+    </mat-toolbar-row>
+  </mat-toolbar>
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <img [src]="link" style="width: 2em; height: 2em; transform: rotate(270deg); margin-right: 1em">
+  <a class="navbar-brand" href="" style="color: teal; font-size: 1em;">{{usuario}}</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+</nav>
+
+<!--#endregion -->
+
+<div class='unicorn-dark-theme alinhamentoItens'>
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Dados do Auto
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <form class="example-form">
+        <mat-form-field class="example-full-width">
+          <input type="text" placeholder="Matrícula" aria-label="Assignee" matInput [formControl]="myControl"
+            [required]=true [matAutocomplete]="auto">
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+            <mat-option *ngFor="let option of filteredOptions | async" [value]="option"
+              (onSelectionChange)='onChangeMatricula(option)'>
+              {{option.matricula}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput type="text" placeholder="Agente" name="agente" id="agente"
+            [(ngModel)]='autodeapreensao.agente' [disabled]=true>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput [matDatepicker]="picker" placeholder="Data da expedição" name="data" id="data"
+            [(ngModel)]=autodeapreensao.dataapreensao [required]=true>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field class="unicorn-dark-theme">
+          <input matInput placeholder="Hora da apreensão" [ngxTimepicker]="picker2" name="hora" id="hora"
+            [(ngModel)]=autodeapreensao.hora [required]=true>
+          <ngx-material-timepicker #picker2></ngx-material-timepicker>
+        </mat-form-field>
+
+      </form>
+
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Dados de localização
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <form class="example-form">
+        <mat-form-field class="example-full-width">
+          <input type="text" placeholder="Bairro" aria-label="Assignee2" matInput [formControl]="myControlBairros"
+            [required]=true [matAutocomplete]="auto2">
+          <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayFnBairros">
+            <mat-option *ngFor="let optionbairro of filteredOptionsBairros | async" [value]="optionbairro" (onSelectionChange)=onChangeBairro(optionbairro)>
+              {{optionbairro.bairro}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+      </form>
+
+      <mat-form-field>
+        <input matInput placeholder="Logradouro" ngx-google-places-autocomplete [options]='googleoptions'
+          (onAddressChange)="handleAddress($event)" [(ngModel)]='autodeapreensao.logradouro' [required]=true />
+      </mat-form-field>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Lacres e Apreensões
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Relatórios
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

@@ -97,8 +97,10 @@
     "is-offline": "^2.1.1",
     "jquery": "^3.4.1",
     "jspdf": "^1.5.3",
-    "moment-timezone": "^0.5.26",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.27",
     "ngx-google-places-autocomplete": "^2.0.4",
+    "ngx-material-timepicker": "^5.2.2",
     "popper": "^1.0.1"
   }
 }

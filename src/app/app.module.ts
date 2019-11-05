@@ -1,4 +1,7 @@
+
+import { GeocodeService } from './services/geocode/geocode.service';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
+import { ReactiveFormsModule } from '@angular/forms';
 import 'reflect-metadata';
 import '../polyfills';
 
@@ -15,7 +18,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { AppRoutingModule } from './app-routing.module';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-
 // NG Translate
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -37,6 +39,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Usuario } from './models/usuario/usuario';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { Lacre } from './models/lacre/lacre';
+import { Auto } from './models/auto/auto';
+import { Agente } from './models/agente/agente';
+import { Bairro } from './models/bairro/bairro';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -51,9 +59,11 @@ export function HttpLoaderFactory(http: HttpClient) {
     AvisocamposComponent
   ],
   imports: [
+    NgxMaterialTimepickerModule.setLocale('pt-BR'),
     GooglePlaceModule,
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     CoreModule,
     SharedModule,
@@ -69,6 +79,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatSnackBarModule,
     MatIconModule,
     MatTooltipModule,
+    MatAutocompleteModule,
     MatExpansionModule,
     TranslateModule.forRoot({
       loader: {
@@ -83,9 +94,14 @@ export function HttpLoaderFactory(http: HttpClient) {
     AvisocamposService,
     Avisocamposmodel,
     LogadoService,
+    Agente,
     Usuario,
+    Lacre,
+    Auto,
+    Bairro,
+    GeocodeService,
     MatDatepickerModule,
-    {provide: MAT_DATE_LOCALE, useValue: 'pt-BR'}
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
   ],
   bootstrap: [AppComponent],
   exports: [
