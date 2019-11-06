@@ -34,8 +34,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 50%;
-  margin-left: 25%;
+  width: 60%;
+  margin-left: 20%;
   margin-top: 2em;
   color: white;
 }
@@ -90,4 +90,36 @@ span {
 
 .email:hover {
   color: #D3D3D3;
+}
+
+th {
+  font-size: 1em;
+  color: turquoise;
+  font-style: normal;
+  font-family: "Times New Roman", Times, serif;
+  text-align: center;
+}
+
+td {
+  font-size: 0.8em;
+  text-align: center;
+}
+
+#deletar {
+  font-size: 1em;
+  color: SteelBlue;
+  text-decoration: underline LightSkyBlue;
+}
+
+#deletar:hover {
+  color: LightCyan;
+}
+
+.quantidade {
+  height: 1.5em;
+  width: 50%;
+  color: turquoise;
+  text-align: center;
+  border-color: white;
+  border-width: 0.1em;
 }

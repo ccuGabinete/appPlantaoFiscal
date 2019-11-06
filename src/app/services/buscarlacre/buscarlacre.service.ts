@@ -51,6 +51,7 @@ export class BuscalacreService {
         lacre.processo = linha.processo;
         lacre.trm = linha.trm;
         lacre.numero = lc.substring(0, 8);
+        lacre.status = lc.substring(9, 11);
         lacre.codigo = lc.substring(21, 25);
         lacre.grupo = lc.substring(26, 28);
         lacre.quantidade = lc.substring(29, 33);

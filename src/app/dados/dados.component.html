@@ -2,7 +2,7 @@
 <div class="unicorn-dark-theme">
   <mat-toolbar color="primary">
     <mat-toolbar-row>
-      <span style="font-size: 1.1em; color:darkblue;">Depósito Público Municipal</span>
+      <span style="font-size: 1.1em; color:darkblue;">Cadastro de Autos</span>
       <mat-icon matTooltip="logout" (click)="onLogout()"> directions_run</mat-icon>
     </mat-toolbar-row>
   </mat-toolbar>
@@ -51,13 +51,21 @@
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput [matDatepicker]="picker" placeholder="Data da expedição" name="data" id="data"
+          <input matInput [matDatepicker]="picker" placeholder="Data da apreensão" name="data" id="data"
             [(ngModel)]=autodeapreensao.dataapreensao [required]=true>
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
 
 
+
+        <div class="24hr-example">
+          <mat-form-field>
+            <input matInput placeholder="Hora da apreensão" name="hora" id="hora" [(ngModel)]=autodeapreensao.hora
+              aria-label="24hr format" [ngxTimepicker]="fullTime" [format]="24" readonly [required]=true>
+          </mat-form-field>
+          <ngx-material-timepicker #fullTime></ngx-material-timepicker>
+        </div>
 
       </form>
 
@@ -82,12 +90,19 @@
           </mat-autocomplete>
         </mat-form-field>
 
+        <mat-form-field>
+          <input matInput placeholder="Logradouro" ngx-google-places-autocomplete [options]='googleoptions'
+            (onAddressChange)="handleAddress($event)" [required]=true [disabled]=disabledLogradouro />
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput type="text" placeholder="Número" name="numero" id="numero"
+            [(ngModel)]=autodeapreensao.lognumero [required]=true [disabled]=disabledLogradouro>
+        </mat-form-field>
+
       </form>
 
-      <mat-form-field>
-        <input matInput placeholder="Logradouro" ngx-google-places-autocomplete [options]='googleoptions'
-          (onAddressChange)="handleAddress($event)" [(ngModel)]='autodeapreensao.logradouro' [required]=true />
-      </mat-form-field>
+
     </mat-expansion-panel>
 
     <mat-expansion-panel>
@@ -96,6 +111,58 @@
           Lacres e Apreensões
         </mat-panel-title>
       </mat-expansion-panel-header>
+
+      <form class="example-form">
+        <mat-form-field class="unicorn-dark-theme">
+          <mat-label>Responsável pela retenção</mat-label>
+          <mat-select color="primary" [(ngModel)]=autodeapreensao.origem id='responsavel' name='responsavel'>
+            <mat-option *ngFor="let n of origemLacre" [value]="n">
+              {{n}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput type="text" placeholder="Lacre" name="lacre" id="lacre" [(ngModel)]=lacre maxlength='8'
+            [required]=true (change)=onchangeLacre() (focus)=onFocusLacre()>
+        </mat-form-field>
+
+        <table class="table table-dark">
+          <thead>
+            <tr>
+              <th scope="col">lacre</th>
+              <th scope="col">posição</th>
+              <th scope="col">grupo</th>
+              <th scope="col">quantidade</th>
+              <th scope="col">ação</th>
+            </tr>
+          </thead>
+          <tr *ngFor='let lacre of listaLacres'>
+            <td>{{lacre.numero}}</td>
+            <td>{{lacre.pos}}</td>
+            <td>
+              <mat-select color="primary" id='grupo' name='grupo' class="table-dark" [(ngModel)]=lacre.grupo>
+                <mat-option *ngFor="let g of origemGrupo" [value]="g.grupo">
+                  {{g.tipo}}
+                </mat-option>
+              </mat-select>
+            </td>
+            <td>
+
+              <div class="col">
+                <input type="number" class="form-control" class='table-dark quantidade' id='quantidade'
+                  name='quantidade' [(ngModel)]=lacre.quantidade (change)=onChangeQuantidade(lacre)>
+              </div>
+            </td>
+            <td><span id='deletar' (click)='onDeleteLacre(lacre)'>Remover</span></td>
+          </tr>
+        </table>
+
+
+
+      </form>
+
+
 
     </mat-expansion-panel>
 

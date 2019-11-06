@@ -1,3 +1,6 @@
+import { Grupo } from './models/grupo/grupo';
+import { AutoService } from './services/auto/auto.service';
+import { MatsnackbarService } from './services/matsnackbar/matsnackbar.service';
 import { BuscalacreService } from './services/buscarlacre/buscarlacre.service';
 
 import { GeocodeService } from './services/geocode/geocode.service';
@@ -95,11 +98,14 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
     })
   ],
   providers: [
+    AutoService,
+    MatsnackbarService,
     BuscalacreService,
     LoginService,
     AvisocamposService,
     Avisocamposmodel,
     LogadoService,
+    Grupo,
     Agente,
     Usuario,
     Lacre,

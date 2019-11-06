@@ -79,4 +79,16 @@ export class FormatacoesService {
     return endereco + ', ' + bairro + ', ' + 'Rio de Janeiro, RJ';
   }
 
+  completaZeros(value: string): string {
+    let strValor = value.toString();
+
+    for (let i = 0; i < strValor.length; i++) {
+      if (strValor.length < 4) {
+        strValor = '0' + strValor;
+      }
+    }
+
+    return strValor;
+  }
+
 }

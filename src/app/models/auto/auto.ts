@@ -2,12 +2,14 @@ import { Lacre } from '../lacre/lacre';
 
 export class Auto {
   agenterespcadastro: string;
+  origem: string;
   numero: string;
   dataapreensao: Date;
   hora: Date;
   matricula: string;
   agente: string;
   logradouro: string;
+  lognumero: string;
   bairro: string;
   cep: string;
   lat: number;
