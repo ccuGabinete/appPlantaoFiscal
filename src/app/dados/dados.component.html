@@ -92,12 +92,12 @@
 
         <mat-form-field>
           <input matInput placeholder="Logradouro" ngx-google-places-autocomplete [options]='googleoptions'
-            (onAddressChange)="handleAddress($event)" [required]=true [disabled]=disabledLogradouro />
+            (onAddressChange)="handleAddress($event)" [required]=true [disabled]=disabledLogradouro [required]=true />
         </mat-form-field>
 
         <mat-form-field>
           <input matInput type="text" placeholder="Número" name="numero" id="numero"
-            [(ngModel)]=autodeapreensao.lognumero [required]=true [disabled]=disabledLogradouro>
+            [(ngModel)]=autodeapreensao.lognumero [disabled]=disabledLogradouro>
         </mat-form-field>
 
       </form>
@@ -113,7 +113,7 @@
       </mat-expansion-panel-header>
 
       <form class="example-form">
-        <mat-form-field class="unicorn-dark-theme">
+        <mat-form-field>
           <mat-label>Responsável pela retenção</mat-label>
           <mat-select color="primary" [(ngModel)]=autodeapreensao.origem id='responsavel' name='responsavel'>
             <mat-option *ngFor="let n of origemLacre" [value]="n">
@@ -123,8 +123,22 @@
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput type="text" placeholder="Lacre" name="lacre" id="lacre" [(ngModel)]=lacre maxlength='8'
+          <input matInput type="text" placeholder="Lacre" name="lacre" id="lacre" [(ngModel)]=lacre.numero maxlength='8'
             [required]=true (change)=onchangeLacre() (focus)=onFocusLacre()>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Grupos</mat-label>
+          <mat-select color="primary" [(ngModel)]=lacre.grupo id='grupo' name='grupo'>
+            <mat-option *ngFor="let n of origemGrupo" [value]="n.grupo">
+              {{n.tipo}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput type="number" placeholder="Quantidade" name="qtde" id="qtde" [(ngModel)]=lacre.quantidade
+            [required]=true (blur)=onChangeQuantidade(lacre)>
         </mat-form-field>
 
         <table class="table table-dark">
@@ -137,29 +151,19 @@
               <th scope="col">ação</th>
             </tr>
           </thead>
-          <tr *ngFor='let lacre of listaLacres'>
-            <td>{{lacre.numero}}</td>
-            <td>{{lacre.pos}}</td>
-            <td>
-              <mat-select color="primary" id='grupo' name='grupo' class="table-dark" [(ngModel)]=lacre.grupo>
-                <mat-option *ngFor="let g of origemGrupo" [value]="g.grupo">
-                  {{g.tipo}}
-                </mat-option>
-              </mat-select>
-            </td>
-            <td>
-
-              <div class="col">
-                <input type="number" class="form-control" class='table-dark quantidade' id='quantidade'
-                  name='quantidade' [(ngModel)]=lacre.quantidade (change)=onChangeQuantidade(lacre)>
-              </div>
-            </td>
+          <tr *ngFor='let lc of listaLacres'>
+            <td>{{lc.numero}}</td>
+            <td>{{lc.pos}}</td>
+            <td>{{lc.grupo}}</td>
+            <td>{{lc.quantidade}}</td>
             <td><span id='deletar' (click)='onDeleteLacre(lacre)'>Remover</span></td>
           </tr>
         </table>
 
-
-
+        <div class="alinhamentoButton unicorn-dark-theme">
+          <button type='submit' mat-button color="primary" #submitButton (click)='onSubmit()'
+            [disabled]=disabled>Salvar</button>
+        </div>
       </form>
 
 

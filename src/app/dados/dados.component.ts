@@ -21,6 +21,7 @@ import { Agentes } from '../interfaces/agentes/agentes';
 import { BuscalacreService } from '../services/buscarlacre/buscarlacre.service';
 import { Lacre } from '../models/lacre/lacre';
 import { Grupo } from '../models/grupo/grupo';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 const go = console.log;
 
 export interface User {
@@ -38,12 +39,13 @@ export class DadosComponent implements OnInit, OnDestroy {
   usuario: string;
   link: string;
   logradouro = '';
+  gp: string;
   disabledLogradouro = true; // mantém o logradouro bloqueado
   myControl = new FormControl();
   myControlBairros = new FormControl();
   myControlLacres = new FormControl();
-  lacre: string;
   quantidadeAutos = 5000;
+  disabled = false;
   googleoptions = {
     types: ['geocode'],
     componentRestrictions: { country: 'BR' },
@@ -59,6 +61,7 @@ export class DadosComponent implements OnInit, OnDestroy {
   constructor(
     public autodeapreensao: Auto,
     public agente: Agente,
+    public lacre: Lacre,
     public bairro: Bairro,
     private grupo: Grupo,
     private geocodeservice: GeocodeService,
@@ -68,15 +71,13 @@ export class DadosComponent implements OnInit, OnDestroy {
     private buscarLacre: BuscalacreService,
     private matsnackbarService: MatsnackbarService,
     private avisocamposservice: AvisocamposService,
-    private autoservide: AutoService
+    private autoservice: AutoService
   ) { }
 
   options: Agentes[] = this.agente.getLista();
   filteredOptions: Observable<Agentes[]>;
   optionsBairros: Ibairro[] = this.bairro.getListaBairro();
   filteredOptionsBairros: Observable<Ibairro[]>;
-  optionsGrupos: IGrupo[] = this.grupo.getGrupos();
-  filteredOptionsGrupo: Observable<IGrupo[]>;
 
   onLogout() {
     const userLogout = new Usuario();
@@ -90,6 +91,7 @@ export class DadosComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.lacre = new Lacre();
     this.autodeapreensao = new Auto();
     this.logado.currentMessage.subscribe(user => {
       this.usuario = user.nome;
@@ -111,28 +113,16 @@ export class DadosComponent implements OnInit, OnDestroy {
         map(matricula => matricula ? this._filter(matricula) : this.options.slice())
       );
 
-
-    this.filteredOptionsGrupo = this.myControlLacres.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => typeof value === 'string' ? value : value.tipo),
-        map(tipo => tipo ? this._filterGrupos(tipo) : this.optionsGrupos.slice())
-      );
-
     // busquei todos os lacres e criei um array para armazenar esses lacres até o fim
     // da seção
     this.buscarLacre.buscarLacre().subscribe(arr => {
       const resp = this.buscarLacre.converteParaArrayDeLacres(arr.body);
       this.buscarLacre.atualizarArrayLacres(resp);
-      go(resp);
     });
 
-    this.autoservide.contarAutos().subscribe(data => {
-      this.quantidadeAutos += data.body.quantidade;
-      this.autoservide.atualizarQuantidade(this.quantidadeAutos);
+    this.autoservice.contarAutos().subscribe(data => {
+      this.quantidadeAutos = this.quantidadeAutos + data.body.quantidade;
     });
-
-
   }
 
   displayFn(agentes?: Agentes): string | undefined {
@@ -141,10 +131,6 @@ export class DadosComponent implements OnInit, OnDestroy {
 
   displayFnBairros(ibairro?: Ibairro): string | undefined {
     return ibairro ? ibairro.bairro : undefined;
-  }
-
-  displayFnGrupos(igrupo?: IGrupo): string | undefined {
-    return igrupo ? igrupo.tipo : undefined;
   }
 
   private _filter(matricula: string): Agentes[] {
@@ -158,13 +144,6 @@ export class DadosComponent implements OnInit, OnDestroy {
 
     return this.optionsBairros.filter(option => option.bairro.toLowerCase().indexOf(filterValue) === 0);
   }
-
-  private _filterGrupos(tipo: string): IGrupo[] {
-    const filterValue = tipo.toLowerCase();
-
-    return this.optionsGrupos.filter(option => option.tipo.toLowerCase().indexOf(filterValue) === 0);
-  }
-
 
   onChangeMatricula(value: any) {
     this.autodeapreensao.matricula = value.matricula;
@@ -181,8 +160,7 @@ export class DadosComponent implements OnInit, OnDestroy {
   }
 
   onchangeLacre() {
-    this.lacre = this.formatacoes.colocaZeros(this.lacre);
-    this.onBuscarLacre(this.lacre);
+    this.lacre.numero = this.formatacoes.colocaZeros(this.lacre.numero);
   }
 
 
@@ -192,13 +170,17 @@ export class DadosComponent implements OnInit, OnDestroy {
   }
 
   onFocusLacre() {
-    this.lacre = '';
+    this.lacre = new Lacre();
   }
 
-  onChangeQuantidade(value: Lacre) {
-    value.quantidade = this.formatacoes.completaZeros(value.quantidade);
-    go(value.quantidade);
-    go(value);
+  onChangeQuantidade(lacre: Lacre) {
+    // tslint:disable-next-line: radix
+    if (parseInt(lacre.quantidade) > 9999) {
+      lacre.quantidade = '9999';
+      go(lacre.quantidade);
+    }
+    this.lacre.quantidade = this.formatacoes.completaZeros(lacre.quantidade);
+    this.onBuscarLacre(this.lacre);
   }
 
 
@@ -207,15 +189,13 @@ export class DadosComponent implements OnInit, OnDestroy {
   public handleAddress(address: any) {
     this.logradouro = address.address_components[0].long_name;
     this.autodeapreensao.logradouro = this.logradouro;
-    this.autodeapreensao.dataapreensao = this.formatacoes.gerarMomentData(this.autodeapreensao.dataapreensao);
-    const local = this.formatacoes.formatarEndereco(this.logradouro, this.autodeapreensao.bairro);
+    const local = this.formatacoes.formatarEndereco(this.autodeapreensao);
     this.geocodeservice.getGeoCode(local).subscribe(data => {
 
       if (data.status === 200) {
         const geo = data.body.results[0].geometry.location;
         this.autodeapreensao.lat = geo.lat;
         this.autodeapreensao.lng = geo.lng;
-        go(this.autodeapreensao);
       }
     }, (error) => {
       this.avisocamposservice.mudarAviso(4);
@@ -227,37 +207,120 @@ export class DadosComponent implements OnInit, OnDestroy {
 
   }
 
-  onBuscarLacre(lacre: string) {
+  onBuscarLacre(lacre: Lacre) {
     this.buscarLacre.arrayAtual.subscribe(data => {
-      const index = data.findIndex(x => x.numero === lacre);
+      const index = data.findIndex(x => x.numero === lacre.numero);
       if (index !== -1) {
-        this.autoservide.quantidadeAtual.subscribe(quantidade => {
-          data[index].pos = (this.quantidadeAutos + 1).toString();
-          data[index].auto = this.autodeapreensao.numero;
-          data[index].quantidade = null;
+        data[index].pos = (this.quantidadeAutos + 1).toString();
+        data[index].auto = this.autodeapreensao.numero;
+        data[index].quantidade = this.lacre.quantidade;
+        data[index].grupo = this.lacre.grupo;
+        data[index].acao = 'atualizar';
 
-          // se o status for igual a 07 então ele tem processo
-          // senão ele será marcado com 00, ou seja, deu entrada no GCD
-          if (data[index].status !== '07') {
-            data[index].status = '00';
-          }
-          this.listaLacres.push(data[index]);
-        });
+        // se o status for igual a 07 então ele tem processo
+        // senão ele será marcado com 00, ou seja, deu entrada no GCD
+        if (data[index].status !== '07') {
+          data[index].status = '00';
+        }
+        this.listaLacres.push(data[index]);
+
       } else {
         const lc = new Lacre();
         lc.pos = (this.quantidadeAutos + 1).toString();
         lc.auto = this.autodeapreensao.numero;
         lc.data = this.formatacoes.gerarData(true);
-        lc.numero = lacre;
-        lc.grupo = '00';
-        lc.quantidade = '0000';
+        lc.numero = lacre.numero;
+        lc.grupo = this.lacre.grupo;
+        lc.quantidade = this.lacre.quantidade;
         lc.processo = '00000000000000';
         lc.codigo = 'aaaa';
         lc.status = '00';
+        lc.acao = 'salvar';
         this.listaLacres.push(lc);
       }
 
     });
   }
+
+  onSelectGrupo(lacre: Lacre, grupo: string) {
+    lacre.grupo = grupo;
+    go(lacre);
+  }
+
+  onTestCampos(): boolean {
+    if (
+      typeof this.autodeapreensao.numero === 'undefined' ||
+      typeof this.autodeapreensao.matricula === 'undefined' ||
+      typeof this.autodeapreensao.dataapreensao === 'undefined' ||
+      typeof this.autodeapreensao.hora === 'undefined' ||
+      typeof this.autodeapreensao.bairro === 'undefined' ||
+      typeof this.autodeapreensao.logradouro === 'undefined' ||
+      typeof this.autodeapreensao.origem === 'undefined'
+
+    ) {
+      this.avisocamposservice.mudarAviso(2);
+      this.matsnackbarService.openSnackBarCampos(AvisocamposComponent, 2000);
+      return false;
+    } else if (this.listaLacres.length > 0) {
+      let indexQuantidade = 0;
+      let indexGrupo = 0;
+      indexQuantidade = this.listaLacres.findIndex(x => x.quantidade === null);
+      indexGrupo = this.listaLacres.findIndex(x => x.grupo === '00');
+      if (indexQuantidade !== -1 || indexGrupo !== -1) {
+        this.avisocamposservice.mudarAviso(6);
+        this.matsnackbarService.openSnackBarCampos(AvisocamposComponent, 2000);
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+  }
+
+  onSubmit() {
+    this.disabled = true;
+    this.autodeapreensao.pos = (this.quantidadeAutos + 1).toString();
+      this.autodeapreensao.dataapreensao = this.formatacoes.gerarMomentData(this.autodeapreensao.dataapreensao);
+    if (this.onTestCampos()) {
+
+      this.autoservice.salvar(this.autodeapreensao).subscribe(data => {
+        this.disabled = false;
+        this.avisocamposservice.mudarAviso(3);
+        this.matsnackbarService.openSnackBarCampos(AvisocamposComponent, 1000);
+      }, error => {
+        this.avisocamposservice.mudarAviso(4);
+        this.matsnackbarService.openSnackBarCampos(AvisocamposComponent, 1000);
+      });
+
+      const atualizar = this.listaLacres.filter((x) => {
+        return x.acao === 'atualizar';
+      });
+
+      const salvar = this.listaLacres.filter((x) => {
+        return x.acao === 'salvar';
+      });
+
+      if (salvar.length > 0) {
+        salvar.forEach(t => {
+          this.buscarLacre.salvar(t).subscribe(() => { }, error => {
+            this.avisocamposservice.mudarAviso(4);
+            this.matsnackbarService.openSnackBarCampos(AvisocamposComponent, 1000);
+          });
+        });
+      }
+
+      if (atualizar.length > 0) {
+        atualizar.forEach(t => {
+          this.buscarLacre.atualizar(t).subscribe(() => { }, error => {
+            this.avisocamposservice.mudarAviso(4);
+            this.matsnackbarService.openSnackBarCampos(AvisocamposComponent, 1000);
+          });
+        });
+      }
+
+    }
+  }
+
 
 }

@@ -1,5 +1,5 @@
 <div class="alerta" *ngIf="loadingCampos === 2">
-    <span>Erro: há campos sem preenchimento</span>
+    <span>Erro: preencha todos os campos</span>
 </div>
 
 <div class="alerta" *ngIf="loadingCampos === 3">
@@ -12,5 +12,9 @@
 
 <div class="alerta" *ngIf="loadingCampos === 5">
   <span>Erro: acesso não autorizado</span>
+</div>
+
+<div class="alerta" *ngIf="loadingCampos === 6">
+  <span>Erro: informações de lacre ausente</span>
 </div>
 

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { HttpClient, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
+import { Auto } from '../../models/auto/auto';
 const url = 'https://gcdapi.herokuapp.com/';
 const local = 'http://localhost:3000/';
 
@@ -19,8 +20,14 @@ export class AutoService {
     this.buscarQuantidade.next(quantidade);
   }
 
+  salvar(auto: Auto): Observable<HttpResponse<Auto>> {
+    return this.http.post<Auto>(url + 'gcd/autos/salvar', auto, { observe: 'response' })
+      .pipe(
+        catchError(this.handleError));
+  }
+
   contarAutos(): Observable<HttpResponse<any>> {
-    return this.http.get<any>(local + 'gcd/autos/contar', { observe: 'response' })
+    return this.http.get<any>(url + 'gcd/autos/contar', { observe: 'response' })
       .pipe(
         catchError(this.handleError));
   }

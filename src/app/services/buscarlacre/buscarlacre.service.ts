@@ -23,6 +23,18 @@ export class BuscalacreService {
     this.arr = [];
   }
 
+  salvar(lacre: Lacre): Observable<HttpResponse<Lacre>> {
+    return this.http.post<Lacre>(url + 'gcd/salvar', lacre, { observe: 'response' })
+      .pipe(
+        catchError(this.handleError));
+  }
+
+  atualizar(lacre: Lacre): Observable<HttpResponse<Lacre>> {
+    return this.http.post<Lacre>(url + 'gcd/atualizaPlantao', lacre, { observe: 'response' })
+      .pipe(
+        catchError(this.handleError));
+  }
+
   buscarLacre(): Observable<HttpResponse<any>> {
     return this.http.get<any>(url + 'gcd/buscarLacre', { observe: 'response' })
       .pipe(

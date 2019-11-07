@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment-timezone';
+import { Auto } from '../../models/auto/auto';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +47,7 @@ export class FormatacoesService {
   }
 
   gerarData(bd?: boolean) {
-    moment.defineLocale('America/Sao_Paulo', {
+    moment.updateLocale('America/Sao_Paulo', {
       parentLocale: 'pt-BR'
     });
     const data = Date.now();
@@ -75,8 +76,8 @@ export class FormatacoesService {
     return dateMoment;
   }
 
-  formatarEndereco(endereco: string, bairro: string) {
-    return endereco + ', ' + bairro + ', ' + 'Rio de Janeiro, RJ';
+  formatarEndereco(auto: Auto) {
+    return auto.logradouro + auto.lognumero + ', ' + auto.bairro + ', ' + 'Rio de Janeiro, RJ';
   }
 
   completaZeros(value: string): string {

@@ -11,4 +11,7 @@ export class Lacre {
   trm: string;
   codigo: string;
   status: string;
+  acao: string;
 }
+
+
