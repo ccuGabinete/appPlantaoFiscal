@@ -7,6 +7,7 @@ import { map, catchError } from 'rxjs/operators';
 import { Lacre } from '../../models/lacre/lacre';
 const url = 'https://gcdapi.herokuapp.com/';
 const local = 'http://localhost:3000/';
+const go = console.log;
 
 @Injectable({
   providedIn: 'root'
@@ -56,7 +57,7 @@ export class BuscalacreService {
       arrlacre.forEach((lc) => {
         const lacre = new Lacre();
         lacre.auto = linha.auto;
-        lacre.data = this.gd.gerarData(true);
+        lacre.data = lc.substring(12, 20);
         // lacre.linha será usado para atualizar o status posteriormente
         lacre.linha = ln + 1;
         lacre.pos = linha.pos;
@@ -87,6 +88,21 @@ export class BuscalacreService {
       return value.codigo === codigo;
     });
     return response;
+  }
+
+  converteParaPlanilhaExcel(lacrearray: Array<Lacre>): string {
+    let strresposta = '';
+    lacrearray.forEach((dado, p, a) => {
+      if (p !== a.length - 1) {
+        // tslint:disable-next-line: max-line-length
+        strresposta = strresposta + dado.numero + '(' + dado.status + ';' + dado.data + ';aaaa;' + dado.grupo + ';' + dado.quantidade + '),';
+      } else {
+        strresposta = strresposta + dado.numero + '(' + dado.status + ';' + dado.data + ';aaaa;' + dado.grupo + ';' + dado.quantidade + ')';
+      }
+
+    });
+
+    return strresposta;
   }
 
   private handleError(error: HttpErrorResponse) {

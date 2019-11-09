@@ -6,7 +6,7 @@ export class Lacre {
   lacre: string;
   linha: number;
   numero: string;
-  pos: string;
+  pos: number;
   processo: string;
   trm: string;
   codigo: string;

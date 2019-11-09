@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment-timezone';
 import { Auto } from '../../models/auto/auto';
+moment.defineLocale('America/Sao_Paulo', {
+  parentLocale: 'pt-BR'
+});
 
 @Injectable({
   providedIn: 'root'
@@ -47,9 +50,6 @@ export class FormatacoesService {
   }
 
   gerarData(bd?: boolean) {
-    moment.updateLocale('America/Sao_Paulo', {
-      parentLocale: 'pt-BR'
-    });
     const data = Date.now();
     const dateMoment = moment(data);
     if (bd) {
@@ -61,17 +61,12 @@ export class FormatacoesService {
   }
 
   gerarMomentData(date) {
-    moment.defineLocale('America/Sao_Paulo', {
-      parentLocale: 'pt-BR'
-    });
+
     const dateMoment = moment(date).format('DD/MM/YYYY');
     return dateMoment;
   }
 
   gerarDataHora(date) {
-    moment.defineLocale('America/Sao_Paulo', {
-      parentLocale: 'pt-BR'
-    });
     const dateMoment = moment(date).format('DD/MM/YYYY hh:mm:ss');
     return dateMoment;
   }

@@ -20,6 +20,6 @@ export class Auto {
   servico: string;
   lacres: string;
   arraylacres: Array<Lacre>;
-  pos: string;
+  pos: number;
   trm = [];
 }
