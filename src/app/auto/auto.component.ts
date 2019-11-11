@@ -152,6 +152,7 @@ export class AutoComponent implements OnInit {
 
     this.autoservice.contarAutos().subscribe(data => {
       this.quantidadeAutos = this.quantidadeAutos + data.body.quantidade;
+      this.autodeapreensao.pos = this.quantidadeAutos + 1;
     });
   }
 
@@ -271,6 +272,7 @@ export class AutoComponent implements OnInit {
 
           this.atualizar = true;
           this.linha = data[index].linha;
+          data[index].pos = this.autodeapreensao.pos;
           data[index].quantidade = this.lacre.quantidade;
           data[index].grupo = this.lacre.grupo;
           data[index].acao = 'atualizar';
@@ -285,6 +287,7 @@ export class AutoComponent implements OnInit {
 
         } else {
           const lc = new Lacre();
+          lc.pos = this.autodeapreensao.pos;
           lc.data = this.formatacoes.gerarData(true);
           lc.numero = lacre.numero;
           lc.grupo = this.lacre.grupo;
@@ -313,6 +316,8 @@ export class AutoComponent implements OnInit {
             }
           });
         }
+      }, error => {
+        go('houve um erro aqui');
       });
     } else {
       this.atualizar = true;
@@ -335,7 +340,7 @@ export class AutoComponent implements OnInit {
         */
         //#endregion
 
-
+        this.lacresdoautoatualizar[index].pos = this.autodeapreensao.pos;
         this.lacresdoautoatualizar[index].quantidade = this.lacre.quantidade;
         this.lacresdoautoatualizar[index].grupo = this.lacre.grupo;
         this.lacresdoautoatualizar[index].acao = 'atualizar';
@@ -349,6 +354,7 @@ export class AutoComponent implements OnInit {
 
       } else {
         const lc = new Lacre();
+        lc.pos = this.autodeapreensao.pos;
         lc.data = this.formatacoes.gerarData(true);
         lc.numero = lacre.numero;
         lc.grupo = this.lacre.grupo;
@@ -407,7 +413,6 @@ export class AutoComponent implements OnInit {
 
   onSubmit() {
     this.disabled = true;
-    this.autodeapreensao.pos = this.quantidadeAutos + 1;
     this.autodeapreensao.dataapreensao = this.formatacoes.gerarMomentData(this.autodeapreensao.dataapreensao);
     if (this.onTestCampos()) {
 
