@@ -29,7 +29,7 @@ export class Grupo {
       { tipo: 'MESA', grupo: '25' },
       { tipo: 'MIDIA', grupo: '26' },
       { tipo: 'MOENDA', grupo: '27' },
-      { tipo: 'ÓCULOS', grupo: '28' },
+      { tipo: 'OCULOS', grupo: '28' },
       { tipo: 'PAPELARIA E BAZAR', grupo: '29' },
       { tipo: 'PERECÍVEIS', grupo: '30' },
       { tipo: 'QUENTINHA', grupo: '31' },
