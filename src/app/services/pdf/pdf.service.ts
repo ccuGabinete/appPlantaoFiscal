@@ -92,7 +92,6 @@ export class PdfService {
     //#endregion
 
     let posicaoY = 0; // responsavel pelo eixo y
-    let posicaoX = 0; // responsável pelo eixo x
     let contarcoluna = 0; // responsável por ouvir quando os lacres passarem de 280
     let contafolha = 1; // para escutar o número da folha de doação
     arr.forEach((e, pos) => {
@@ -159,43 +158,43 @@ export class PdfService {
         text01: {
           texto: 'Numero: ' + a.numero,
           x: 18,
-          y: 33
+          y: 20
         },
 
         text02: {
           texto: 'Auto: ' + a.auto,
           x: 18,
-          y: 50
+          y: 37
         },
 
         text03: {
           texto: 'Posição: ' + a.pos,
           x: 18,
-          y: 67
+          y: 54
         },
 
         text04: {
           texto: 'Data: ' + a.data,
           x: 18,
-          y: 84
+          y: 71
         },
 
         text05: {
           texto: 'Grupo: ' + a.grupo,
           x: 18,
-          y: 101
+          y: 88
         },
 
         text06: {
           texto: 'Quantidade: ' + a.quantidade,
           x: 18,
-          y: 118
+          y: 105
         },
 
         text07: {
           texto: 'Etiqueta: ' + (b + 1) + ' de ' + c.length,
           x: 18,
-          y: 255
+          y: 122
         }
       };
       if (b === 0) {

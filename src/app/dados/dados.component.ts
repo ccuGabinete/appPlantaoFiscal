@@ -10,16 +10,9 @@ export interface User {
   styleUrls: ['./dados.component.scss']
 })
 
-export class DadosComponent implements OnInit, OnDestroy {
+export class DadosComponent implements OnInit {
 
-  ngOnInit(): void {
-   
-  }
-
-  ngOnDestroy(): void {
-   
-  }
-  
+  ngOnInit(): void {}
 
 
 }
