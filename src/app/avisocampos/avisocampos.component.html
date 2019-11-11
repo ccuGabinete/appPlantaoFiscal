@@ -1,5 +1,5 @@
 <div class="alerta" *ngIf="loadingCampos === 2">
-    <span>Erro: preencha todos os campos</span>
+  <span>Erro: preencha todos os campos</span>
 </div>
 
 <div class="alerta" *ngIf="loadingCampos === 3">
@@ -18,3 +18,18 @@
   <span>Erro: informações de lacre ausente</span>
 </div>
 
+<div class="alerta" *ngIf="loadingCampos === 7">
+  <span>Erro: Auto inexistente</span>
+</div>
+
+<div class="alerta" *ngIf="loadingCampos === 8">
+  <span>Erro: Lacre inexistente</span>
+</div>
+
+<div class="alerta" *ngIf="loadingCampos === 9">
+  <span>Sucesso: Lacre corrigido</span>
+</div>
+
+<div class="alerta" *ngIf="loadingCampos === 10">
+  <span>Erro: Informe o local</span>
+</div>

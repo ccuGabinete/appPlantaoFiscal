@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { PageNotFoundComponent } from './shared/components';
 import { DadosComponent } from './dados/dados.component';
 import { HomeComponent } from './home/home.component';
+import { AutoComponent } from './auto/auto.component';
 
 const routes: Routes = [
   {
@@ -12,6 +13,10 @@ const routes: Routes = [
   {
     path: 'dados',
     component: DadosComponent
+  },
+  {
+    path: 'auto',
+    component: AutoComponent
   }
 ];
 

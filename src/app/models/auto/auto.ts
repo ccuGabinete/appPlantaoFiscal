@@ -21,5 +21,6 @@ export class Auto {
   lacres: string;
   arraylacres: Array<Lacre>;
   pos: number;
+  recebedor: string;
   trm = [];
 }

@@ -50,6 +50,10 @@ import { Auto } from './models/auto/auto';
 import { Agente } from './models/agente/agente';
 import { Bairro } from './models/bairro/bairro';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
+import { Lacreupdate } from './models/lacreupdate/lacreupdate';
+import { AutoComponent } from './auto/auto.component';
+import { PdfService } from './services/pdf/pdf.service';
+import { TitleCasePipe } from '@angular/common';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -63,7 +67,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
     AppComponent,
     DadosComponent,
     HomeComponent,
-    AvisocamposComponent
+    AvisocamposComponent,
+    AutoComponent
   ],
   imports: [
     NgxMaskModule.forRoot(options),
@@ -98,6 +103,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
     })
   ],
   providers: [
+    TitleCasePipe,
     AutoService,
     MatsnackbarService,
     BuscalacreService,
@@ -105,10 +111,12 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
     AvisocamposService,
     Avisocamposmodel,
     LogadoService,
+    PdfService,
     Grupo,
     Agente,
     Usuario,
     Lacre,
+    Lacreupdate,
     Auto,
     Bairro,
     GeocodeService,

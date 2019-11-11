@@ -41,4 +41,9 @@ export class Grupo {
       { tipo: 'VESTUÁRIO', grupo: '37' }
     ];
   }
+
+  getTipo(grupo: string): string {
+    const index = this.getGrupos().findIndex(x => x.grupo === grupo);
+    return this.getGrupos()[index].tipo;
+  }
 }

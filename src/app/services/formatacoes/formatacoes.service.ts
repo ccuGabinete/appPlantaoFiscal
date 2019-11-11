@@ -60,15 +60,19 @@ export class FormatacoesService {
 
   }
 
-  gerarMomentData(date) {
+  gerarMomentData(date: Date) {
 
     const dateMoment = moment(date).format('DD/MM/YYYY');
     return dateMoment;
   }
 
-  gerarDataHora(date) {
+  gerarDataHora(date: Date) {
     const dateMoment = moment(date).format('DD/MM/YYYY hh:mm:ss');
     return dateMoment;
+  }
+
+  comparaData (dataquery: Date, data: Date) {
+    return moment(dataquery).isSame(data);
   }
 
   formatarEndereco(auto: Auto) {
@@ -85,6 +89,27 @@ export class FormatacoesService {
     }
 
     return strValor;
+  }
+
+  GE (numero: number) : string {
+    let str = '';
+    for (let i = 0; i <= numero; i++) {
+      str = str + ' ';
+    }
+
+    return str;
+  }
+
+  formataLocal(id: string) {
+    
+    const recebedor = [
+      { local: 'CCU', id: '1' },
+      { local: 'GCD', id: '2' },
+      { local: 'EVENTO', id: '3' }
+    ]
+
+    const index = recebedor.findIndex(x => x.id === id);
+    return recebedor[index].local;
   }
 
 }

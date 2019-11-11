@@ -10,6 +10,7 @@ export class Lacre {
   processo: string;
   trm: string;
   codigo: string;
+  recebedor: string;
   status: string;
   acao: string;
 }

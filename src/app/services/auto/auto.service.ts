@@ -26,12 +26,17 @@ export class AutoService {
         catchError(this.handleError));
   }
 
+  buscar(auto: Auto): Observable<HttpResponse<Auto>> {
+    return this.http.post<Auto>(url + 'gcd/autos/buscarAuto', {numero: auto.numero}, { observe: 'response' })
+      .pipe(
+        catchError(this.handleError));
+  }
+
   contarAutos(): Observable<HttpResponse<any>> {
     return this.http.get<any>(url + 'gcd/autos/contar', { observe: 'response' })
       .pipe(
         catchError(this.handleError));
   }
-
 
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {

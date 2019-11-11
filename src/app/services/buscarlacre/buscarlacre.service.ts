@@ -68,6 +68,11 @@ export class BuscalacreService {
         lacre.codigo = lc.substring(21, 25);
         lacre.grupo = lc.substring(26, 28);
         lacre.quantidade = lc.substring(29, 33);
+        if (lc.substring(34, 35) !== '') {
+          lacre.recebedor = lc.substring(34, 35)
+        } else {
+          lacre.recebedor = '0';
+        }
         arr.push(lacre);
       });
     });
@@ -95,9 +100,9 @@ export class BuscalacreService {
     lacrearray.forEach((dado, p, a) => {
       if (p !== a.length - 1) {
         // tslint:disable-next-line: max-line-length
-        strresposta = strresposta + dado.numero + '(' + dado.status + ';' + dado.data + ';aaaa;' + dado.grupo + ';' + dado.quantidade + '),';
+        strresposta = strresposta + dado.numero + '(' + dado.status + ';' + dado.data + ';aaaa;' + dado.grupo + ';' + dado.quantidade + ';' + dado.recebedor + '),';
       } else {
-        strresposta = strresposta + dado.numero + '(' + dado.status + ';' + dado.data + ';aaaa;' + dado.grupo + ';' + dado.quantidade + ')';
+        strresposta = strresposta + dado.numero + '(' + dado.status + ';' + dado.data + ';aaaa;' + dado.grupo + ';' + dado.quantidade + ';' + dado.recebedor + ')';
       }
 
     });
