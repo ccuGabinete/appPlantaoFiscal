@@ -136,13 +136,15 @@
             (change)=onchangeLacre() (focus)=onFocusLacre()>
         </mat-form-field>
 
-        <mat-form-field>
-          <mat-label>Grupos</mat-label>
-          <mat-select color="primary" [(ngModel)]=lacre.grupo id='grupo' name='grupo'>
-            <mat-option *ngFor="let n of origemGrupo" [value]="n.grupo">
-              {{n.tipo}}
+        <mat-form-field class="example-full-width">
+          <input type="text" placeholder="Grupo" aria-label="Assignee" matInput [formControl]="myControlLacres"
+            [required]=true [matAutocomplete]="auto3">
+          <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayFnGrupo">
+            <mat-option *ngFor="let option of filteredOptionsGrupos | async" (onSelectionChange)=onSelectedGrupo(option)
+              [value]="option">
+              {{option.tipo}}
             </mat-option>
-          </mat-select>
+          </mat-autocomplete>
         </mat-form-field>
 
         <mat-form-field>

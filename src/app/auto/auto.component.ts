@@ -1,3 +1,4 @@
+import { IGrupo } from './../interfaces/grupo/igrupo';
 import { AutoService } from './../services/auto/auto.service';
 import { AvisocamposComponent } from './../avisocampos/avisocampos.component';
 import { MatsnackbarService } from './../services/matsnackbar/matsnackbar.service';
@@ -64,13 +65,12 @@ export class AutoComponent implements OnInit {
     'METRÔ',
     'CCU'
   ];
-  origemGrupo = this.grupo.getGrupos();
   listaLacres: Array<Lacre> = [];
   recebedor = [
     { local: 'CCU', id: '1' },
     { local: 'GCD', id: '2' },
     { local: 'EVENTO', id: '3' }
-  ]
+  ];
 
   constructor(
     public autodeapreensao: Auto,
@@ -95,6 +95,8 @@ export class AutoComponent implements OnInit {
   filteredOptions: Observable<Agentes[]>;
   optionsBairros: Ibairro[] = this.bairro.getListaBairro();
   filteredOptionsBairros: Observable<Ibairro[]>;
+  origemGrupo = this.grupo.getGrupos();
+  filteredOptionsGrupos: Observable<IGrupo[]>;
 
   onLogout() {
     const userLogout = new Usuario();
@@ -131,12 +133,19 @@ export class AutoComponent implements OnInit {
         map(matricula => matricula ? this._filter(matricula) : this.options.slice())
       );
 
+      this.filteredOptionsGrupos = this.myControlLacres.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : value.tipo),
+        map(tipo => tipo ? this._filterGrupo(tipo) : this.origemGrupo.slice())
+      );
+
     // busquei todos os lacres e criei um array para armazenar esses lacres até o fim
     // da seção
     this.buscarLacre.buscarLacre().subscribe(arr => {
       arr.body.forEach(x => {
         this.lacresrespostaintegral.push(x);
-      })
+      });
       const resp = this.buscarLacre.converteParaArrayDeLacres(arr.body);
       this.buscarLacre.atualizarArrayLacres(resp);
     });
@@ -154,6 +163,10 @@ export class AutoComponent implements OnInit {
     return ibairro ? ibairro.bairro : undefined;
   }
 
+  displayFnGrupo(igrupo?: IGrupo): string | undefined {
+    return igrupo ? igrupo.tipo : undefined;
+  }
+
   private _filter(matricula: string): Agentes[] {
     const filterValue = matricula.toLowerCase();
 
@@ -164,6 +177,12 @@ export class AutoComponent implements OnInit {
     const filterValue = bairro.toLowerCase();
 
     return this.optionsBairros.filter(option => option.bairro.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  private _filterGrupo(tipo: string): IGrupo[] {
+    const filterValue = tipo.toLowerCase();
+
+    return this.origemGrupo.filter(option => option.tipo.toLowerCase().indexOf(filterValue) === 0);
   }
 
   onChangeMatricula(value: any) {
@@ -223,10 +242,6 @@ export class AutoComponent implements OnInit {
       this.avisocamposservice.mudarAviso(4);
       this.matsnackbarService.openSnackBarCampos(AvisocamposComponent, 2000);
     });
-  }
-
-  ngOnDestroy(): void {
-
   }
 
   onBuscarLacre(lacre: Lacre) {
@@ -354,6 +369,10 @@ export class AutoComponent implements OnInit {
     lacre.grupo = grupo;
   }
 
+  onSelectedGrupo(value: any) {
+    this.lacre.grupo = value.grupo;
+  }
+
   onTestCampos(): boolean {
     if (
       typeof this.autodeapreensao.numero === 'undefined' ||
@@ -465,6 +484,10 @@ export class AutoComponent implements OnInit {
     this.disabledButao = true;
   }
 
+  onFocusGrupo() {
+
+  }
+
   onChangeAuto(): Lacre[] {
     const response = this.lacresrespostaintegral.filter(x => x.auto === this.lacreupdate.auto);
     if (response.length > 0) {
@@ -509,8 +532,8 @@ export class AutoComponent implements OnInit {
 
 
   buscarString(lacre: string): boolean {
-    let res = lacre;
-    let regex = new RegExp(res);
+    const res = lacre;
+    const regex = new RegExp(res);
     let str = '';
     if (this.onChangeAuto().length > 0) {
       str = this.onChangeAuto()[0].lacre;
@@ -537,9 +560,9 @@ export class AutoComponent implements OnInit {
       const data = this.datadorelatorio;
       this.buscarLacre.arrayAtual.subscribe(t => {
         const arr = t.filter(x => {
-          let aux = this.formatacoes.gerarMomentData(x.data);
+          const aux = this.formatacoes.gerarMomentData(x.data);
           return this.formatacoes.comparaData(data, aux) && x.recebedor === this.autodeapreensao.recebedor;
-        })
+        });
         this.pdfservice.downloadPDF(arr, this.formatacoes.gerarMomentData(data), this.autodeapreensao.recebedor);
       });
     } else {
@@ -556,8 +579,8 @@ export class AutoComponent implements OnInit {
   onChangeAutoEtiqueta() {
     this.aa = new Auto();
     const index = this.autoservice.buscar(this.autodeapreensao).subscribe(data => {
-     
-      if(data.body.numero !== '') {
+
+      if (data.body.numero !== '') {
         this.aa.numero = data.body.numero;
         this.aa.pos = data.body.pos;
         this.aa.dataapreensao = data.body.dataapreensao;
@@ -581,12 +604,12 @@ export class AutoComponent implements OnInit {
     this.buscarLacre.arrayAtual.subscribe(arr => {
       const novoarray = arr.filter(x => {
         return x.auto === this.aa.numero;
-      })
+      });
 
       this.pdfservice.downloadLabelLacre(novoarray);
 
-    })
-    
+    });
+
   }
-  //#enregion
+  //#endregion
 }
